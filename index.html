@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaflet Mapping</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <style>
+        body{
+            margin: 0;
+            padding: 0;
+        }
+
+    #map { height: 100vh;
+    width: 100%;
+    }
+    
+    </style>
+</head>
+<body>
+
+    <div id="map"></div>
+</body>
+</html>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+    //Map initialization..default view
+    var map = L.map('map').setView([25.958778, 91.054459], 13);
+    //osm layers
+   var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+})
+osm.addTo(map);
+
+//water color map
+var watercolor = L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_watercolor/{z}/{x}/{y}.{ext}', {
+	minZoom: 1,
+	maxZoom: 16,
+	attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://www.stamen.com/" target="_blank">Stamen Design</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+	ext: 'jpg'
+});
+watercolor.addTo(map)
+
+//google map
+
+var googleSat = L.tileLayer('http://{s}.google.com/vt?lyrs=s&x={x}&y={y}&z={z}',{
+    maxZoom: 20,
+    subdomains:['mt0','mt1','mt2','mt3']
+});
+googleSat.addTo(map)
+
+//marker of a place..
+var marker = L.marker([25.95833, 91.05748]).addTo(map);
+
+var circle = L.circle([25.9811, 91.04809], {
+    color: 'red',
+    fillColor: '#f03',
+    fillOpacity: 0.5,
+    radius: 300
+}).addTo(map);
+
+var polygon = L.polygon([
+    [25.9519, 91.0638],
+    [25.9456, 91.0768],
+    [25.9386, 91.0643]
+]).addTo(map);
+
+marker.bindPopup("Dhupdhara").openPopup();
+circle.bindPopup("I am a circle.");
+
+//This a function to show info with users
+function onMapClick(e) {
+    alert("You clicked the map at " + e.latlng);
+}
+
+map.on('click', onMapClick);
+
+
+var popup = L.popup();
+
+//Better version of showing info
+function onMapClick(e) {
+    popup
+        .setLatLng(e.latlng)
+        .setContent("You clicked the map at " + e.latlng.toString())
+        .openOn(map);
+}
+
+map.on('click', onMapClick);
+</script>
